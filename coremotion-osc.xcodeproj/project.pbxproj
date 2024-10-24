@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6D4BABDC1C5130A60042ADA0 /* CoreMotionExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreMotionExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D4BABDC1C5130A60042ADA0 /* coremotion-osc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "coremotion-osc.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D4BABDF1C5130A60042ADA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6D4BABE11C5130A60042ADA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		6D4BABE41C5130A60042ADA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 		6D4BABD31C5130A60042ADA0 = {
 			isa = PBXGroup;
 			children = (
-				6D4BABDE1C5130A60042ADA0 /* CoreMotionExample */,
+				6D4BABDE1C5130A60042ADA0 /* coremotion-osc */,
 				6D4BABDD1C5130A60042ADA0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -80,12 +80,12 @@
 		6D4BABDD1C5130A60042ADA0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6D4BABDC1C5130A60042ADA0 /* CoreMotionExample.app */,
+				6D4BABDC1C5130A60042ADA0 /* coremotion-osc.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6D4BABDE1C5130A60042ADA0 /* CoreMotionExample */ = {
+		6D4BABDE1C5130A60042ADA0 /* coremotion-osc */ = {
 			isa = PBXGroup;
 			children = (
 				6D43CF4C1C5A0086003EA4EF /* Sources */,
@@ -93,15 +93,15 @@
 				6D43CF4F1C5A00A5003EA4EF /* Assets */,
 				6D43CF4E1C5A0092003EA4EF /* Supporting Files */,
 			);
-			path = CoreMotionExample;
+			path = "coremotion-osc";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6D4BABDB1C5130A60042ADA0 /* CoreMotionExample */ = {
+		6D4BABDB1C5130A60042ADA0 /* coremotion-osc */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6D4BABEE1C5130A60042ADA0 /* Build configuration list for PBXNativeTarget "CoreMotionExample" */;
+			buildConfigurationList = 6D4BABEE1C5130A60042ADA0 /* Build configuration list for PBXNativeTarget "coremotion-osc" */;
 			buildPhases = (
 				6D4BABD81C5130A60042ADA0 /* Sources */,
 				6D4BABD91C5130A60042ADA0 /* Frameworks */,
@@ -111,9 +111,9 @@
 			);
 			dependencies = (
 			);
-			name = CoreMotionExample;
+			name = "coremotion-osc";
 			productName = CoreMotionExample;
-			productReference = 6D4BABDC1C5130A60042ADA0 /* CoreMotionExample.app */;
+			productReference = 6D4BABDC1C5130A60042ADA0 /* coremotion-osc.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -133,7 +133,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6D4BABD71C5130A60042ADA0 /* Build configuration list for PBXProject "CoreMotionExample" */;
+			buildConfigurationList = 6D4BABD71C5130A60042ADA0 /* Build configuration list for PBXProject "coremotion-osc" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -147,7 +147,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6D4BABDB1C5130A60042ADA0 /* CoreMotionExample */,
+				6D4BABDB1C5130A60042ADA0 /* coremotion-osc */,
 			);
 		};
 /* End PBXProject section */
@@ -306,12 +306,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 5T554W2A99;
-				INFOPLIST_FILE = CoreMotionExample/Info.plist;
+				INFOPLIST_FILE = "coremotion-osc/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = maximbilan.CoreMotionExample;
+				PRODUCT_BUNDLE_IDENTIFIER = starling.coremotionosc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -320,19 +325,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 5T554W2A99;
-				INFOPLIST_FILE = CoreMotionExample/Info.plist;
+				INFOPLIST_FILE = "coremotion-osc/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = maximbilan.CoreMotionExample;
+				PRODUCT_BUNDLE_IDENTIFIER = starling.coremotionosc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6D4BABD71C5130A60042ADA0 /* Build configuration list for PBXProject "CoreMotionExample" */ = {
+		6D4BABD71C5130A60042ADA0 /* Build configuration list for PBXProject "coremotion-osc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6D4BABEC1C5130A60042ADA0 /* Debug */,
@@ -341,7 +351,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6D4BABEE1C5130A60042ADA0 /* Build configuration list for PBXNativeTarget "CoreMotionExample" */ = {
+		6D4BABEE1C5130A60042ADA0 /* Build configuration list for PBXNativeTarget "coremotion-osc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6D4BABEF1C5130A60042ADA0 /* Debug */,
