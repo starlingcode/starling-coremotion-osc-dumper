@@ -2,107 +2,24 @@
 //  ViewController.swift
 //  CoreMotionExample
 //
-//  Created by Maxim Bilan on 1/21/16.
-//  Copyright © 2016 Maxim Bilan. All rights reserved.
+//  Copyright © 2024 Starling. All rights reserved.
 //
 
 import UIKit
 import CoreMotion
 
-import Foundation
-import Network
-
-class OSCSender {
-    private var connection: NWConnection?
-    private let port: UInt16
-    private let hostName: String
-    
-    init(hostName: String, port: UInt16) {
-        self.hostName = hostName
-        self.port = port
-        setupConnection()
-    }
-    
-    private func setupConnection() {
-        let endpoint = NWEndpoint.hostPort(host: NWEndpoint.Host(hostName), port: NWEndpoint.Port(integerLiteral: port))
-        connection = NWConnection(to: endpoint, using: .udp)
-        
-        connection?.stateUpdateHandler = { [weak self] state in
-            switch state {
-            case .ready:
-                print("Connection ready")
-            case .failed(let error):
-                print("Connection failed: \(error)")
-                self?.reconnect()
-            default:
-                break
-            }
-        }
-        
-        connection?.start(queue: .global())
-    }
-    
-    private func reconnect() {
-        connection?.cancel()
-        setupConnection()
-    }
-    
-    func sendOSCMessage(address: String, arguments: [Any]) {
-        var data = Data()
-        
-        // Add OSC Address Pattern
-        data.append(alignedString(address))
-        
-        // Add Type Tag String
-        var typeTagString = ","
-        for argument in arguments {
-            switch argument {
-            case is Int32: typeTagString += "i"
-            case is Float: typeTagString += "f"
-            case is String: typeTagString += "s"
-            default: continue
-            }
-        }
-        data.append(alignedString(typeTagString))
-        
-        // Add Arguments
-        for argument in arguments {
-            switch argument {
-            case let intValue as Int32:
-                var bigEndian = intValue.bigEndian
-                data.append(Data(bytes: &bigEndian, count: MemoryLayout<Int32>.size))
-            case let floatValue as Float:
-                var bigEndian = floatValue.bitPattern.bigEndian
-                data.append(Data(bytes: &bigEndian, count: MemoryLayout<UInt32>.size))
-            case let stringValue as String:
-                data.append(alignedString(stringValue))
-            default:
-                continue
-            }
-        }
-        
-        connection?.send(content: data, completion: .contentProcessed { error in
-            if let error = error {
-                print("Failed to send message: \(error)")
-            }
-        })
-    }
-    
-    private func alignedString(_ string: String) -> Data {
-        var data = string.data(using: .utf8) ?? Data()
-        let padding = 4 - (data.count % 4)
-        if padding < 4 {
-            data.append(contentsOf: Array(repeating: 0, count: padding))
-        }
-        return data
-    }
-}
-
 class ViewController: UIViewController {
 
 	let motionManager = CMMotionManager()
 	var timer: Timer!
-    let oscSender = OSCSender(hostName: "192.168.50.37", port: 8000)
+    var oscSender = OSCSender(hostName: "10.0.0.25", port: 8000)
+    var host: String = "10.0.0.25"
+    var port: UInt16 = 8000
+    let hostLabel = UILabel()
+    let hostTextField = UITextField()
+    let portLabel = UILabel()
+    let portTextField = UITextField()
+    let submitButton = UIButton(type: .system)
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -112,31 +29,81 @@ class ViewController: UIViewController {
 		motionManager.startMagnetometerUpdates()
 		motionManager.startDeviceMotionUpdates()
 		
-		timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
+		timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
         
-        // Create an instance
+        self.view.backgroundColor = UIColor.systemBackground
+                
+        hostLabel.text = "Host:"
+        hostLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(hostLabel)
+        
+        hostTextField.placeholder = host
+        hostTextField.borderStyle = .roundedRect
+        hostTextField.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(hostTextField)
+        
+        portLabel.text = "Port:"
+        portLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(portLabel)
+        
+        portTextField.placeholder = String(port)
+        portTextField.borderStyle = .roundedRect
+        portTextField.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(portTextField)
+        
+        submitButton.setTitle("Set", for: .normal)
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        submitButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        self.view.addSubview(submitButton)
+        
+        NSLayoutConstraint.activate([
+            hostLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            hostLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
+            
+            hostTextField.leadingAnchor.constraint(equalTo: hostLabel.trailingAnchor, constant: 10),
+            hostTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            hostTextField.topAnchor.constraint(equalTo: hostLabel.topAnchor),
+            hostTextField.widthAnchor.constraint(equalToConstant: 250),
+            
+            portLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            portLabel.topAnchor.constraint(equalTo: hostTextField.bottomAnchor, constant: 20),
+            
+            portTextField.leadingAnchor.constraint(equalTo: portLabel.trailingAnchor, constant: 10),
+            portTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            portTextField.topAnchor.constraint(equalTo: portLabel.topAnchor),
+            portTextField.widthAnchor.constraint(equalToConstant: 250),
+            
+            submitButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            submitButton.topAnchor.constraint(equalTo: portTextField.bottomAnchor, constant: 30),
+        ])
         
 	}
 
 	@objc func update() {
-//		if let accelerometerData = motionManager.accelerometerData {
-//			print(accelerometerData)
-//		}
-//		if let gyroData = motionManager.gyroData {
-//			print(gyroData)
-//		}
-//		if let magnetometerData = motionManager.magnetometerData {
-//			print(magnetometerData)
-//		}
 		if let deviceMotion = motionManager.deviceMotion {
-			print(deviceMotion)
-            let x = deviceMotion.attitude.pitch
-            let y = deviceMotion.attitude.roll
-            let z = deviceMotion.attitude.yaw
-            oscSender.sendOSCMessage(address: "/itsme/skeeter/pitch", arguments: [Float(x)])
-            oscSender.sendOSCMessage(address: "/itsme/skeeter/roll", arguments: [Float(y)])
-            oscSender.sendOSCMessage(address: "/itsme/skeeter/yaw", arguments: [Float(z)])
+            let pitch = deviceMotion.attitude.pitch
+            let roll = deviceMotion.attitude.roll
+            let yaw = deviceMotion.attitude.yaw
+            oscSender.sendOSCMessage(address: "/starling-cm-osc/pitch", arguments: [Float(pitch)])
+            oscSender.sendOSCMessage(address: "/starling-cm-osc/roll", arguments: [Float(roll)])
+            oscSender.sendOSCMessage(address: "/starling-cm-osc/yaw", arguments: [Float(yaw)])
 		}
 	}
+    
+    // Callback for button tap event
+    @objc func buttonTapped() {
+        host = hostTextField.text ?? "No Host"
+        let portString = portTextField.text ?? "No Port"
+        if let portNumber = UInt16(portString) {
+            port = portNumber
+            initializeOsc()
+        } else {
+            print("Invalid port number")
+        }
+    }
+    
+    func initializeOsc() {
+        oscSender = OSCSender(hostName: host, port: port)
+    }
 	
 }
